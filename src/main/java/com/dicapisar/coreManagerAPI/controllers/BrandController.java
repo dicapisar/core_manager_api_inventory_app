@@ -2,10 +2,7 @@ package com.dicapisar.coreManagerAPI.controllers;
 
 import com.dicapisar.coreManagerAPI.dtos.request.BrandCreateRequestDTO;
 import com.dicapisar.coreManagerAPI.dtos.response.BrandResponseDTO;
-import com.dicapisar.coreManagerAPI.exceptions.RecordAlreadyExistedException;
-import com.dicapisar.coreManagerAPI.exceptions.RecordNotFoundException;
-import com.dicapisar.coreManagerAPI.exceptions.SessionErrorException;
-import com.dicapisar.coreManagerAPI.exceptions.SessionWithOutPermissionException;
+import com.dicapisar.coreManagerAPI.exceptions.*;
 import com.dicapisar.coreManagerAPI.services.IBrandService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,5 +47,18 @@ public class BrandController {
 
         return new ResponseEntity<>(brandService.createNewBrand(brandCreateRequestDTO, getIdUserSession(session)), HttpStatus.CREATED);
 
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<BrandResponseDTO>> getListBrands(@RequestParam(required = false, defaultValue = "true") String typeStatus,
+                                                                HttpSession session)
+            throws SessionErrorException, SessionWithOutPermissionException, TypeStatusErrorException, ListRecordNotFoundException {
+
+        ArrayList<String> rolesPermissions = new ArrayList<>(List.of(ADMIN, MANAGER, EMPLOYED));
+
+        validateSessionExist(session);
+        validateSessionHavePermissions(session, rolesPermissions);
+
+        return new ResponseEntity<>(brandService.getListBrands(typeStatus), HttpStatus.OK);
     }
 }

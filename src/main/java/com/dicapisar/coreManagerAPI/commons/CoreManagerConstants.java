@@ -9,4 +9,10 @@ public class CoreManagerConstants {
 
     public static final String DEACTIVATE = "DEACTIVATE";
     public static final String ACTIVATE = "ACTIVATE";
+
+    public static final String STATUS_TRUE = "true";
+    public static final String STATUS_FALSE = "false";
+    public static final String STATUS_BOTH = "both";
+
+
 }
