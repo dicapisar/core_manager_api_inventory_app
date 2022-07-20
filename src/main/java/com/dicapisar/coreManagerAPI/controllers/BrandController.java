@@ -78,4 +78,36 @@ public class BrandController {
 
         return new ResponseEntity<>(brandService.updateBrandById(brandUpdateRequestDTO, brandId, getIdUserSession(session)), HttpStatus.OK);
     }
+
+    @PutMapping("/activate/{brandId}")
+    public ResponseEntity<?> activateBrandById(@PathVariable Long brandId, HttpSession session)
+            throws SessionErrorException, SessionWithOutPermissionException, RecordAlreadyHasStateException,
+            RecordNotFoundException {
+
+        ArrayList<String> rolesPermissions = new ArrayList<>(List.of(ADMIN, MANAGER, EMPLOYED));
+
+        validateSessionExist(session);
+        validateSessionHavePermissions(session, rolesPermissions);
+
+        brandService.changeStatusToBrandById(brandId, getIdUserSession(session), true);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @PutMapping("/deactivate/{brandId}")
+    public ResponseEntity<?> deactivateBrandById(@PathVariable Long brandId, HttpSession session)
+            throws SessionErrorException, SessionWithOutPermissionException, RecordAlreadyHasStateException,
+            RecordNotFoundException {
+
+        ArrayList<String> rolesPermissions = new ArrayList<>(List.of(ADMIN, MANAGER, EMPLOYED));
+
+        validateSessionExist(session);
+        validateSessionHavePermissions(session, rolesPermissions);
+
+        brandService.changeStatusToBrandById(brandId, getIdUserSession(session), false);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
 }

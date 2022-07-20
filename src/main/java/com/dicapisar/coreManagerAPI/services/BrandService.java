@@ -105,6 +105,27 @@ public class BrandService implements IBrandService{
 
     }
 
+    public void changeStatusToBrandById(Long brandId, Long updaterId, boolean newStatus)
+            throws RecordNotFoundException, RecordAlreadyHasStateException {
+
+        Brand brand = brandRepository.getBrandById(brandId);
+
+        if (brand == null) {
+            throw new RecordNotFoundException("brand", brandId);
+        }
+
+        if (brand.isActive() == newStatus) {
+            throw new RecordAlreadyHasStateException("brand");
+        }
+
+        User updater = userRepository.getUserById(updaterId);
+
+        changeStatusToBrand(brand, newStatus, updater);
+
+        brandRepository.save(brand);
+
+    }
+
     private List<Brand> getBrandList() throws ListRecordNotFoundException {
        List<Brand> brandList = brandRepository.getBrandList();
 
@@ -131,5 +152,9 @@ public class BrandService implements IBrandService{
         brand.setUpdater(updater);
     }
 
-
+    private void changeStatusToBrand(Brand brand, boolean newStatus, User updater) {
+        brand.setActive(newStatus);
+        brand.setUpdater(updater);
+        brand.setUpdateDate(LocalDateTime.now());
+    }
 }

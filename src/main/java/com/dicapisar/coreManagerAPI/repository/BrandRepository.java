@@ -22,4 +22,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     @Query("select b from Brand b")
     List<Brand> getBrandList();
 
+    @Query("select b from Brand b where b.id =:brandId")
+    Brand getBrandById(@Param("brandId") Long brandId);
+
 }

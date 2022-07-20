@@ -14,4 +14,6 @@ public interface IBrandService {
     List<BrandResponseDTO> getListBrands(String typeStatus) throws TypeStatusErrorException, ListRecordNotFoundException;
     BrandResponseDTO updateBrandById(BrandUpdateRequestDTO brandUpdateRequestDTO, Long brandId, Long updaterId)
             throws RecordNotFoundException, RecordNotActiveException, RecordWithSameDataException;
+    void changeStatusToBrandById(Long brandId, Long updaterId, boolean newStatus)
+            throws RecordNotFoundException, RecordAlreadyHasStateException;
 }
