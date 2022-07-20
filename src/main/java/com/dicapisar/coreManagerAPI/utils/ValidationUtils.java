@@ -1,6 +1,8 @@
 package com.dicapisar.coreManagerAPI.utils;
 
+import com.dicapisar.coreManagerAPI.exceptions.RecordNotActiveException;
 import com.dicapisar.coreManagerAPI.exceptions.TypeStatusErrorException;
+import com.dicapisar.coreManagerAPI.models.Brand;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +15,12 @@ public class ValidationUtils {
 
         if (!listTypeStatus.contains(typeStatus)) {
             throw new TypeStatusErrorException(typeStatus);
+        }
+    }
+
+    public static void validateStatusActive(Brand brand) throws RecordNotActiveException {
+        if (!brand.isActive()) {
+            throw new RecordNotActiveException("brand", brand.getId());
         }
     }
 }

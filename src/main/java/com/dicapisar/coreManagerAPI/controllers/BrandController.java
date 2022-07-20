@@ -1,12 +1,14 @@
 package com.dicapisar.coreManagerAPI.controllers;
 
 import com.dicapisar.coreManagerAPI.dtos.request.BrandCreateRequestDTO;
+import com.dicapisar.coreManagerAPI.dtos.request.BrandUpdateRequestDTO;
 import com.dicapisar.coreManagerAPI.dtos.response.BrandResponseDTO;
 import com.dicapisar.coreManagerAPI.exceptions.*;
 import com.dicapisar.coreManagerAPI.services.IBrandService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -36,7 +38,7 @@ public class BrandController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BrandResponseDTO> createNewBrand(@RequestBody BrandCreateRequestDTO brandCreateRequestDTO,
+    public ResponseEntity<BrandResponseDTO> createNewBrand(@Validated @RequestBody BrandCreateRequestDTO brandCreateRequestDTO,
                                                            HttpSession session)
             throws SessionErrorException, SessionWithOutPermissionException, RecordAlreadyExistedException {
 
@@ -60,5 +62,20 @@ public class BrandController {
         validateSessionHavePermissions(session, rolesPermissions);
 
         return new ResponseEntity<>(brandService.getListBrands(typeStatus), HttpStatus.OK);
+    }
+
+    @PostMapping("/{brandId}")
+    public ResponseEntity<BrandResponseDTO> updateBrandById(@PathVariable Long brandId,
+                                                            @Validated @RequestBody BrandUpdateRequestDTO brandUpdateRequestDTO,
+                                                            HttpSession session)
+            throws SessionErrorException, SessionWithOutPermissionException, RecordNotFoundException, RecordNotActiveException,
+            RecordWithSameDataException {
+
+        ArrayList<String> rolesPermissions = new ArrayList<>(List.of(ADMIN, MANAGER, EMPLOYED));
+
+        validateSessionExist(session);
+        validateSessionHavePermissions(session, rolesPermissions);
+
+        return new ResponseEntity<>(brandService.updateBrandById(brandUpdateRequestDTO, brandId, getIdUserSession(session)), HttpStatus.OK);
     }
 }

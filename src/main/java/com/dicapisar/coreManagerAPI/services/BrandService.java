@@ -1,11 +1,9 @@
 package com.dicapisar.coreManagerAPI.services;
 
 import com.dicapisar.coreManagerAPI.dtos.request.BrandCreateRequestDTO;
+import com.dicapisar.coreManagerAPI.dtos.request.BrandUpdateRequestDTO;
 import com.dicapisar.coreManagerAPI.dtos.response.BrandResponseDTO;
-import com.dicapisar.coreManagerAPI.exceptions.ListRecordNotFoundException;
-import com.dicapisar.coreManagerAPI.exceptions.RecordAlreadyExistedException;
-import com.dicapisar.coreManagerAPI.exceptions.RecordNotFoundException;
-import com.dicapisar.coreManagerAPI.exceptions.TypeStatusErrorException;
+import com.dicapisar.coreManagerAPI.exceptions.*;
 import com.dicapisar.coreManagerAPI.models.Brand;
 import com.dicapisar.coreManagerAPI.models.User;
 import com.dicapisar.coreManagerAPI.repository.BrandRepository;
@@ -14,12 +12,14 @@ import com.dicapisar.coreManagerAPI.utils.BrandUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.dicapisar.coreManagerAPI.commons.CoreManagerConstants.STATUS_BOTH;
 import static com.dicapisar.coreManagerAPI.commons.CoreManagerConstants.STATUS_TRUE;
+import static com.dicapisar.coreManagerAPI.utils.ValidationUtils.validateStatusActive;
 import static com.dicapisar.coreManagerAPI.utils.ValidationUtils.validateTypeStatus;
 
 @Service
@@ -79,6 +79,32 @@ public class BrandService implements IBrandService{
 
     }
 
+    public BrandResponseDTO updateBrandById(BrandUpdateRequestDTO brandUpdateRequestDTO, Long brandId, Long updaterId)
+            throws RecordNotFoundException, RecordNotActiveException, RecordWithSameDataException {
+        Brand brand = brandRepository.getBrandByIdAAndIsActive(brandId);
+
+        if (brand == null) {
+            throw new RecordNotFoundException("brand", brandId);
+        }
+
+        Brand brandExistingInDataBase = brandRepository.getBrandByName(brandUpdateRequestDTO.getName());
+
+        if (brandExistingInDataBase != null && !brandExistingInDataBase.getId().equals(brandId)) {
+            throw new RecordWithSameDataException("brand", "name");
+        }
+
+        validateStatusActive(brand);
+
+        User updater = userRepository.getUserById(updaterId);
+
+        setNewDataToBrand(brand, brandUpdateRequestDTO, updater);
+
+        Brand brandUpdated = brandRepository.save(brand);
+
+        return BrandUtils.toBrandResponseDTO(brandUpdated);
+
+    }
+
     private List<Brand> getBrandList() throws ListRecordNotFoundException {
        List<Brand> brandList = brandRepository.getBrandList();
 
@@ -97,6 +123,12 @@ public class BrandService implements IBrandService{
         }
 
         return brandList;
+    }
+
+    private void setNewDataToBrand(Brand brand, BrandUpdateRequestDTO brandUpdateRequestDTO, User updater) {
+        brand.setUpdateDate(LocalDateTime.now());
+        brand.setName(brandUpdateRequestDTO.getName());
+        brand.setUpdater(updater);
     }
 
 
