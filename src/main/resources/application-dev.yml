@@ -4,7 +4,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${USER_NAME_DATABASE}
     password: ${PASSWORD_DATABASE}
-    url: jdbc:mysql://${HOST_DATABASE}:${PORT_DATABASE}/${NAME_DATABASE}_${SCOPE} #?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://${HOST_DATABASE}:${PORT_DATABASE}/${NAME_DATABASE} #?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
     initialize: true
 
   jpa:
