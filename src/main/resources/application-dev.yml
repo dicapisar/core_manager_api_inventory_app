@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -22,9 +21,7 @@ spring:
       namespace: spring:session
 
   redis:
-    host: ${HOST_REDIS}
-    port: ${PORT_REDIS}
-    password: ${PASSWORD_REDIS}
+    url: ${HOST_REDIS}
 
   servlet:
     servlet:
@@ -33,4 +30,4 @@ spring:
 
   sql:
     init:
-      mode: never
+      mode: always
