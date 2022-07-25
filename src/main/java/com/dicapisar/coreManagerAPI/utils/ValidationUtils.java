@@ -2,9 +2,7 @@ package com.dicapisar.coreManagerAPI.utils;
 
 import com.dicapisar.coreManagerAPI.exceptions.RecordNotActiveException;
 import com.dicapisar.coreManagerAPI.exceptions.TypeStatusErrorException;
-import com.dicapisar.coreManagerAPI.models.Brand;
-import com.dicapisar.coreManagerAPI.models.Provider;
-import com.dicapisar.coreManagerAPI.models.TypeItem;
+import com.dicapisar.coreManagerAPI.models.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +33,18 @@ public class ValidationUtils {
     public static void validateStatusActive(Provider provider) throws RecordNotActiveException {
         if (!provider.isActive()) {
             throw new RecordNotActiveException("typeItem", provider.getId());
+        }
+    }
+
+    public static void validateStatusActive(Contact contact) throws RecordNotActiveException {
+        if (!contact.isActive()) {
+            throw new RecordNotActiveException("contact", contact.getId());
+        }
+    }
+
+    public static void validateStatusActive(Item item) throws RecordNotActiveException {
+        if (!item.isActive()) {
+            throw new RecordNotActiveException("item", item.getId());
         }
     }
 }
