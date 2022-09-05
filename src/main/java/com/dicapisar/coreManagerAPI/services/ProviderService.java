@@ -18,6 +18,7 @@ import com.dicapisar.coreManagerAPI.utils.TypeItemUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ public class ProviderService implements IProviderService {
         return ProviderUtils.toProviderResponseDTO(providerCreated);
     }
 
+    @Transactional
     public List<ProviderResponseDTO> getListProviders(String typeStatus)
             throws TypeStatusErrorException, ListRecordNotFoundException {
 

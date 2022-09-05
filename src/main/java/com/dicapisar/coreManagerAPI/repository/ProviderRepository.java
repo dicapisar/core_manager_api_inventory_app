@@ -19,7 +19,7 @@ public interface ProviderRepository extends JpaRepository<Provider, Long> {
     @Query("select p from Provider p where p.isActive = :typeStatus")
     List<Provider> getProviderListByTypeStatus(@Param("typeStatus") Boolean typeStatus);
 
-    @Query("select p from Brand p")
+    @Query("select p from Provider p")
     List<Provider> getProviderList();
 
     @Query("select p from Provider p where p.id = :providerId")
