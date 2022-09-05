@@ -23,7 +23,6 @@ spring:
   redis:
     host: ${HOST_REDIS}
     port: ${PORT_REDIS}
-    password: ${PASSWORD_REDIS}
 
   servlet:
     servlet:
